@@ -92,10 +92,7 @@ if ($navbarBurgers.length > 0) {
 
     <div class="buttons">
   <button id="next-seg" class="button">
-    Next Segmentation
-  </button>
-  <button id="previous-seg" class="button">
-    Previous Segmentation
+    Switch Segmentation
   </button>
   <button id="calculate" class="button">
     Calculate
@@ -107,14 +104,26 @@ if ($navbarBurgers.length > 0) {
 <script>
 
 document.getElementById('calculate').addEventListener('click', function(){
-  var segmentationArray = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
-  var count = 0;
-  for(var i = 0; i < segmentationArray.length; ++i){
-    if(segmentationArray[i] == 1){
-      count++;
+  var segmentationArray1 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
+  var segmentationArray2 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
+
+//  var columns = cornerstone.getImage(document.getElementById('cornerstone-element')).columns;
+//  var height = cornerstone.getImage(document.getElementById('cornerstone-element')).height;
+
+  var miss = 0;
+  var off = 0
+  var same = 0
+  var length = Math.min(segmentationArray1.length,segmentationArray2.length);
+
+  for(var i = 0; i < length; ++i){
+    if(segmentationArray1[i] == 1 || segmentationArray2[i] == 1){
+      if(segmentationArray1[i]==segmentationArray2[i]){ same++; }
+      else if(segmentationArray1[i]==1) { miss++; }
+      else if(segmentationArray1[i]==0) { off++; }
     }
   }
-  document.getElementById("test").innerHTML = count;
+
+  document.getElementById("test").innerHTML = "Same: "+ same + " Miss: " + miss+ " Off: " + off;
 });
 
 function initCustomColorMap(){
@@ -122,9 +131,7 @@ function initCustomColorMap(){
   const colormap = cornerstone.colors.getColormap(colorMapId);
   const distinctColors = [
     [255, 255, 255, 255],
-    [60, 180, 175, 255],
-    [255, 225, 25, 255],
-    [0, 130, 200, 255],
+    [60, 180, 175, 255]
   ];
 
   colormap.setNumberOfColors(distinctColors.length);
@@ -139,10 +146,6 @@ function initCustomColorMap(){
 // UI Setup
 document.getElementById('next-seg').addEventListener('click', function(){
   cornerstoneTools.store.state.tools[0].nextSegmentation();
-});
-
-document.getElementById('previous-seg').addEventListener('click', function(){
-  cornerstoneTools.store.state.tools[0].previousSegmentation();
 });
 
 
