@@ -42,38 +42,7 @@
 </head>
 <body><header role="banner">
   <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/examples/">
-        <img src="/horizontal-logo.png" height="28">
-      </a>
-
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          Docs
-        </a>
-
-        <a class="navbar-item" href="/api">
-          API
-        </a>
-
-        <a class="navbar-item" href="/examples/">
-          Examples
-        </a>
-
-        <a class="navbar-item" href="https://github.com/cornerstonejs/cornerstoneTools">
-          GitHub
-        </a>
-      </div>
-
-    </div>
+    
   </nav>
 </header>
 
@@ -108,20 +77,7 @@ if ($navbarBurgers.length > 0) {
       <div class="wrapper">
         <section class="section">
   <div class="container">
-    <h1 class="title is-1">Custom Segmentation Colors</h1>
-
-    <div class="buttons">
-      <button class="button set-tool-mode is-primary" data-action="Active">
-        Active
-      </button>
-      <button class="button set-tool-mode" data-action="Passive">
-        Passive
-      </button>
-      <button class="button set-tool-mode" data-action="Enabled">Enable</button>
-      <button class="button set-tool-mode" data-action="Disabled">
-        Disable
-      </button>
-    </div>
+    
 
     <div class="cornerstone-element-wrapper">
       <div
@@ -131,6 +87,8 @@ if ($navbarBurgers.length > 0) {
         oncontextmenu="return false"
       ></div>
     </div>
+    <div id="test">
+    </div>
 
     <div class="buttons">
   <button id="next-seg" class="button">
@@ -139,32 +97,26 @@ if ($navbarBurgers.length > 0) {
   <button id="previous-seg" class="button">
     Previous Segmentation
   </button>
+  <button id="calculate" class="button">
+    Calculate
+  </button>
 </div>
 
-<h3 class="title is-3">Setup</h3>
 
-<!-- prettier-ignore-start -->
-
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">const</span> <span class="nx">colorMapId</span> <span class="o">=</span> <span class="s1">'HelloWorld'</span><span class="p">;</span>
-<span class="kd">const</span> <span class="nx">colormap</span> <span class="o">=</span> <span class="nx">cornerstone</span><span class="p">.</span><span class="nx">colors</span><span class="p">.</span><span class="nx">getColormap</span><span class="p">(</span><span class="nx">colorMapId</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">distinctColors</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-<span class="p">];</span>
-
-<span class="nx">colormap</span><span class="p">.</span><span class="nx">setNumberOfColors</span><span class="p">(</span><span class="nx">distinctColors</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">distinctColors</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">colormap</span><span class="p">.</span><span class="nx">setColor</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">distinctColors</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="nx">cornerstoneTools</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">modules</span><span class="p">.</span><span class="nx">brush</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">colorMapId</span> <span class="o">=</span> <span class="nx">colorMapId</span><span class="p">;</span></code></pre></figure>
-
-<!-- prettier-ignore-end -->
 
 <script>
+
+document.getElementById('calculate').addEventListener('click', function(){
+  var segmentationArray = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
+  var count = 0;
+  for(var i = 0; i < segmentationArray.length; ++i){
+    if(segmentationArray[i] == 1){
+      count++;
+    }
+  }
+  document.getElementById("test").innerHTML = count;
+});
+
 function initCustomColorMap(){
   const colorMapId = 'HelloWorld';
   const colormap = cornerstone.colors.getColormap(colorMapId);
