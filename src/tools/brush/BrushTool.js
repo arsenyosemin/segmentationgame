@@ -38,6 +38,10 @@ export default class BrushTool extends BaseBrushTool {
     this.touchDragCallback = this._paint.bind(this);
   }
 
+  my_paint() {
+    this.needs_re_paint = true;
+  }
+
   /**
    * Called by the event dispatcher to render the image.
    *
@@ -45,6 +49,10 @@ export default class BrushTool extends BaseBrushTool {
    * @returns {void}
    */
   renderBrush(evt) {
+    if (this.needs_re_paint) {
+      evt.detail.currentPoints = { image: { x: -1, y: -1 } };
+      this._paint(evt);
+    }
     const eventData = evt.detail;
     const viewport = eventData.viewport;
 
@@ -133,14 +141,12 @@ function _overlappingStrategy(evt, configuration) {
   }
 
   const toolData = toolState.data;
+  let pointerArray = [];
 
-  if (x < 0 || x > columns || y < 0 || y > rows) {
-    return;
+  if (!(x < 0 || x > columns || y < 0 || y > rows)) {
+    const radius = brushModule.state.radius;
+    pointerArray = getCircle(radius, rows, columns, x, y);
   }
-
-  const radius = brushModule.state.radius;
-  const pointerArray = getCircle(radius, rows, columns, x, y);
-
   _drawMainColor(eventData, toolData, pointerArray, configuration);
 }
 
