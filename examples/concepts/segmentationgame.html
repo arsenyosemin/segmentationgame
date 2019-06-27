@@ -110,6 +110,9 @@ if ($navbarBurgers.length > 0) {
   <button id="calculate" class="button">
     Calculate
   </button>
+  <button id="load-answer" class="button">
+    Load Answer
+  </button>
   <button id="next-img" class="button">
     Next Image
   </button>
@@ -119,8 +122,11 @@ if ($navbarBurgers.length > 0) {
 
 <script>
 
-document.getElementById('calculate').addEventListener('click', function(){
+document.getElementById('load-answer').addEventListener('click', function(){
   loadGroundTruth();
+});
+
+document.getElementById('calculate').addEventListener('click', function(){
   var segmentationArrayA = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
   var segmentationArrayB = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
 
@@ -176,13 +182,35 @@ document.getElementById('pan-tool').addEventListener('click', function(){
   document.getElementById('next-seg').disabled = true;
 });
 
+function downloadGroundTruth(){
+  const testData = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
+  const jsonData = JSON.stringify(testData);
+  download(jsonData, 'json.txt', 'text/plain');
+}
+
+
 function loadGroundTruth(){
   const e = document.getElementById('cornerstone-element');
-  const testData = cornerstoneTools.getToolState(e,'brush').data[0];
-  cornerstoneTools.addToolState(e,'brush', testData);
-  b = cornerstoneTools.getToolForElement(e,'Brush')
-  b.my_paint()
-  cornerstone.invalidate(e);
+  const path = 'json.txt';
+  fetch(path).then(data => data.json()).then(
+    testData => {
+      let newData = JSON.parse(JSON.stringify(testData));
+      newData.pixelData = new Uint8ClampedArray(Object.values(testData.pixelData));
+      cornerstoneTools.addToolState(e,'brush', newData);
+      b = cornerstoneTools.getToolForElement(e,'Brush')
+      b.my_paint();
+      cornerstone.invalidate(e);
+      cornerstoneTools.store.state.tools[0].nextSegmentation();
+    }
+  );
+}
+
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
 }
 
 function initCustomColorMap(){
