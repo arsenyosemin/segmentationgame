@@ -38,7 +38,7 @@
   <script src="https://unpkg.com/cornerstone-wado-image-loader"></script>
 
   <!-- Why we're all here ;) -->
-  <script src="https://unpkg.com/cornerstone-tools@%5E3"></script>
+  <script src="/dist/cornerstoneTools.js"></script>
 </head>
 <body><header role="banner">
   <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -177,8 +177,12 @@ document.getElementById('pan-tool').addEventListener('click', function(){
 });
 
 function loadGroundTruth(){
-  const testData = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
-  cornerstoneTools.addToolState(document.getElementById('cornerstone-element'),'brush', testData);
+  const e = document.getElementById('cornerstone-element');
+  const testData = cornerstoneTools.getToolState(e,'brush').data[0];
+  cornerstoneTools.addToolState(e,'brush', testData);
+  b = cornerstoneTools.getToolForElement(e,'Brush')
+  b.my_paint()
+  cornerstone.invalidate(e);
 }
 
 function initCustomColorMap(){
@@ -348,6 +352,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
     }
     return 0;
   };
+
 </script>
 
       </div>
