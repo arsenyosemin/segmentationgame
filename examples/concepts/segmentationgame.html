@@ -120,6 +120,7 @@ if ($navbarBurgers.length > 0) {
 <script>
 
 document.getElementById('calculate').addEventListener('click', function(){
+  loadGroundTruth();
   var segmentationArrayA = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
   var segmentationArrayB = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
 
@@ -175,7 +176,10 @@ document.getElementById('pan-tool').addEventListener('click', function(){
   document.getElementById('next-seg').disabled = true;
 });
 
-
+function loadGroundTruth(){
+  const testData = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
+  cornerstoneTools.addToolState(document.getElementById('cornerstone-element'),'brush', testData);
+}
 
 function initCustomColorMap(){
   const colorMapId = 'HelloWorld';
