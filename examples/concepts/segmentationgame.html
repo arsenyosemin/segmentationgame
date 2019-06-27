@@ -104,26 +104,26 @@ if ($navbarBurgers.length > 0) {
 <script>
 
 document.getElementById('calculate').addEventListener('click', function(){
-  var segmentationArray1 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
-  var segmentationArray2 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
+  var segmentationArrayA = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
+  var segmentationArrayB = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
 
 //  var columns = cornerstone.getImage(document.getElementById('cornerstone-element')).columns;
 //  var height = cornerstone.getImage(document.getElementById('cornerstone-element')).height;
 
-  var miss = 0;
-  var off = 0
-  var same = 0
-  var length = Math.min(segmentationArray1.length,segmentationArray2.length);
+  var BminusA = 0;
+  var AminusB = 0;
+  var intersection = 0;
+  var length = Math.min(segmentationArrayA.length,segmentationArrayB.length);
 
   for(var i = 0; i < length; ++i){
-    if(segmentationArray1[i] == 1 || segmentationArray2[i] == 1){
-      if(segmentationArray1[i]==segmentationArray2[i]){ same++; }
-      else if(segmentationArray1[i]==1) { miss++; }
-      else if(segmentationArray1[i]==0) { off++; }
+    if(segmentationArrayA[i] == 1 || segmentationArrayB[i] == 1){
+      if(segmentationArrayA[i]==segmentationArrayB[i]){ intersection++; }
+      else if(segmentationArrayA[i]==1) { AminusB++; }
+      else { BminusA++; }
     }
   }
 
-  document.getElementById("test").innerHTML = "Jaccard: "+((same/(same+miss+off))*100).toFixed(3) + "%";
+  document.getElementById("test").innerHTML = "Jaccard: "+((intersection/(BminusA+AminusB+intersection))*100).toFixed(3) + "%";
 });
 
 function initCustomColorMap(){
