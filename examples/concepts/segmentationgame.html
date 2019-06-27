@@ -104,9 +104,7 @@ if ($navbarBurgers.length > 0) {
     </div>
 
     <div class="buttons">
-  <button id="next-seg" class="button">
-    Switch Segmentation
-  </button>
+
   <button id="calculate" class="button">
     Load Answer
   </button>
@@ -247,9 +245,9 @@ function initCustomColorMap(){
 }
 
 // UI Setup
-document.getElementById('next-seg').addEventListener('click', function(){
-  cornerstoneTools.store.state.tools[0].nextSegmentation();
-});
+// document.getElementById('next-seg').addEventListener('click', function(){
+//   cornerstoneTools.store.state.tools[0].nextSegmentation();
+// });
 
 
 // Logic to fire after first image load
