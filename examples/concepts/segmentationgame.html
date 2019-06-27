@@ -99,7 +99,7 @@ if ($navbarBurgers.length > 0) {
         oncontextmenu="return false"
       ></div>
     </div>
-    <div id="test">
+    <div id="score" class='score'>
       Score:
     </div>
 
@@ -109,6 +109,9 @@ if ($navbarBurgers.length > 0) {
   </button>
   <button id="calculate" class="button">
     Calculate
+  </button>
+  <button id="next-img" class="button">
+    Next Image
   </button>
 </div>
 
@@ -137,9 +140,12 @@ document.getElementById('calculate').addEventListener('click', function(){
   }
   var jaccard = ((intersection/(BminusA+AminusB+intersection))*100).toFixed(3);
   var scoreRanges = {0:"D",20:"C",40:"B",60:"A",80:"A+"};
-  var score = scoreRanges[Math.round(jaccard/20)*20];
+  if (jaccard == 0) { var score = "F";}
+  else if (jaccard == 100) { var score = "Perfect Score";}
+  else {
+  var score = scoreRanges[Math.round(jaccard/20)*20]; }
 
-  document.getElementById("test").innerHTML = "Score: "+score;
+  document.getElementById("score").innerHTML = "Score: "+score;
 });
 
 document.getElementById('brush-tool').addEventListener('click', function(){
