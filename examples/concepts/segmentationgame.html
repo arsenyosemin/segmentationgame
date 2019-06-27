@@ -139,11 +139,11 @@ document.getElementById('calculate').addEventListener('click', function(){
     }
   }
   var jaccard = ((intersection/(BminusA+AminusB+intersection))*100).toFixed(3);
-  var scoreRanges = {0:"D",20:"C",40:"B",60:"A",80:"A+"};
+  var scoreRanges = {1:"D",21:"C",41:"B",61:"A",81:"A+"};
   if (jaccard == 0) { var score = "F";}
   else if (jaccard == 100) { var score = "Perfect Score";}
   else {
-  var score = scoreRanges[Math.round(jaccard/20)*20]; }
+  var score = scoreRanges[(Math.round(jaccard/20)*20)+1]; }
 
   document.getElementById("score").innerHTML = "Score: "+score;
 });
@@ -244,10 +244,15 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   element.tabIndex = 0;
   element.focus();
 
-  cornerstone.loadImage(imageIds[0]).then(function(image) {
+  var image_index = 0
+  cornerstone.loadImage(imageIds[image_index]).then(function(image) {
     cornerstone.displayImage(element, image);
-    cornerstoneTools.addStackStateManager(element, ['stack']);
-    cornerstoneTools.addToolState(element, 'stack', stack);
+  });
+
+  document.getElementById('next-img').addEventListener('click', function(){
+    cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
+      cornerstone.displayImage(element, image);
+    });
   });
 
   // Add the tool
