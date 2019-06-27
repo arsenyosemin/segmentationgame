@@ -268,11 +268,14 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   const BrushTool = cornerstoneTools.BrushTool;
   const ZoomTool = cornerstoneTools.ZoomTool;
   const PanTool = cornerstoneTools.PanTool;
+  const ZoomTouchPinchTool = cornerstoneTools.ZoomTouchPinchTool;
   cornerstoneTools.addTool(BrushTool);
   cornerstoneTools.addTool(ZoomTool);
   cornerstoneTools.addTool(PanTool);
+  cornerstoneTools.addTool(ZoomTouchPinchTool);
 
   cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
 
   /***************************************************************************
    * UI & Boilerplate setup code
