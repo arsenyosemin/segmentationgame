@@ -38,7 +38,7 @@
   <script src="https://unpkg.com/cornerstone-wado-image-loader"></script>
 
   <!-- Why we're all here ;) -->
-  <script src="https://unpkg.com/cornerstone-tools@%5E3"></script>
+  <script src="/dist/cornerstoneTools.js"></script>
 </head>
 <body><header role="banner">
   <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -140,11 +140,11 @@ document.getElementById('calculate').addEventListener('click', function(){
     }
   }
   var jaccard = ((intersection/(BminusA+AminusB+intersection))*100).toFixed(3);
-  var scoreRanges = {0:"D",20:"C",40:"B",60:"A",80:"A+"};
+  var scoreRanges = {1:"D",21:"C",41:"B",61:"A",81:"A+"};
   if (jaccard == 0) { var score = "F";}
   else if (jaccard == 100) { var score = "Perfect Score";}
   else {
-  var score = scoreRanges[Math.round(jaccard/20)*20]; }
+  var score = scoreRanges[(Math.round(jaccard/20)*20)+1]; }
 
   document.getElementById("score").innerHTML = "Score: "+score;
 });
@@ -177,8 +177,12 @@ document.getElementById('pan-tool').addEventListener('click', function(){
 });
 
 function loadGroundTruth(){
-  const testData = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
-  cornerstoneTools.addToolState(document.getElementById('cornerstone-element'),'brush', testData);
+  const e = document.getElementById('cornerstone-element');
+  const testData = cornerstoneTools.getToolState(e,'brush').data[0];
+  cornerstoneTools.addToolState(e,'brush', testData);
+  b = cornerstoneTools.getToolForElement(e,'Brush')
+  b.my_paint()
+  cornerstone.invalidate(e);
 }
 
 function initCustomColorMap(){
@@ -248,10 +252,15 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   element.tabIndex = 0;
   element.focus();
 
-  cornerstone.loadImage(imageIds[0]).then(function(image) {
+  var image_index = 0
+  cornerstone.loadImage(imageIds[image_index]).then(function(image) {
     cornerstone.displayImage(element, image);
-    cornerstoneTools.addStackStateManager(element, ['stack']);
-    cornerstoneTools.addToolState(element, 'stack', stack);
+  });
+
+  document.getElementById('next-img').addEventListener('click', function(){
+    cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
+      cornerstone.displayImage(element, image);
+    });
   });
 
   // Add the tool
@@ -348,6 +357,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
     }
     return 0;
   };
+
 </script>
 
       </div>
