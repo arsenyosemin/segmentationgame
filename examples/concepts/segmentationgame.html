@@ -72,22 +72,36 @@ if ($navbarBurgers.length > 0) {
 }
 
 });
+function detectmob() { 
+ if( navigator.userAgent.match(/Android/i)
+ || navigator.userAgent.match(/webOS/i)
+ || navigator.userAgent.match(/iPhone/i)
+ || navigator.userAgent.match(/iPad/i)
+ || navigator.userAgent.match(/iPod/i)
+ || navigator.userAgent.match(/BlackBerry/i)
+ || navigator.userAgent.match(/Windows Phone/i)
+ ){
+    return true;
+  }
+ else {
+    return false;
+  }
+}
 </script>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
         <section class="section">
   <div class="container">
 
-
-    <button id="brush-tool" class="button">
+    <button id="brush-tool" class="button" >
       Brush Tool
     </button>
 
-    <button id="zoom-tool" class="button">
+    <button id="zoom-tool" class="button" >
       Zoom Tool
     </button>
 
-    <button id="pan-tool" class="button">
+    <button id="pan-tool" class="button" >
       Pan Tool
     </button>
 
@@ -116,6 +130,11 @@ if ($navbarBurgers.length > 0) {
 
 
 <script>
+if(detectmob()==true){
+  document.getElementById('brush-tool').style.visibility = 'hidden';
+  document.getElementById('zoom-tool').style.visibility = 'hidden';
+  document.getElementById('pan-tool').style.visibility = 'hidden';
+}
 
 document.getElementById('calculate').addEventListener('click', function(){
   let tempdata = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
