@@ -1,7 +1,27 @@
 .active-mode {
   color: red;
 }
+body {
+  background:
+    Black;
+}
 
+.navbar {
+  background: Black;
+}
+
+.footer {
+  background: Black;
+}
+
+.score {
+  font-size: 20px;
+}
+
+.button {
+  color: Grey;
+  background: DarkBlue;
+}
 .cornerstone-element-wrapper {
   width: 100%;
   margin: 15px auto 35px auto;

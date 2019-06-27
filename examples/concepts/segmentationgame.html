@@ -5,7 +5,7 @@
   </script>
 
   <title>
-    Custom Segmentation Colors
+    Pacs Man
   </title>
 
   <!-- support for mobile touch devices -->
@@ -42,38 +42,7 @@
 </head>
 <body><header role="banner">
   <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/examples/">
-        <img src="/horizontal-logo.png" height="28">
-      </a>
 
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
-    <div id="navbarBasicExample" class="navbar-menu">
-      <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          Docs
-        </a>
-
-        <a class="navbar-item" href="/api">
-          API
-        </a>
-
-        <a class="navbar-item" href="/examples/">
-          Examples
-        </a>
-
-        <a class="navbar-item" href="https://github.com/cornerstonejs/cornerstoneTools">
-          GitHub
-        </a>
-      </div>
-
-    </div>
   </nav>
 </header>
 
@@ -108,20 +77,19 @@ if ($navbarBurgers.length > 0) {
       <div class="wrapper">
         <section class="section">
   <div class="container">
-    <h1 class="title is-1">Custom Segmentation Colors</h1>
 
-    <div class="buttons">
-      <button class="button set-tool-mode is-primary" data-action="Active">
-        Active
-      </button>
-      <button class="button set-tool-mode" data-action="Passive">
-        Passive
-      </button>
-      <button class="button set-tool-mode" data-action="Enabled">Enable</button>
-      <button class="button set-tool-mode" data-action="Disabled">
-        Disable
-      </button>
-    </div>
+
+    <button id="brush-tool" class="button">
+      Brush Tool
+    </button>
+
+    <button id="zoom-tool" class="button">
+      Zoom Tool
+    </button>
+
+    <button id="pan-tool" class="button">
+      Pan Tool
+    </button>
 
     <div class="cornerstone-element-wrapper">
       <div
@@ -131,50 +99,96 @@ if ($navbarBurgers.length > 0) {
         oncontextmenu="return false"
       ></div>
     </div>
+    <div id="score" class='score'>
+      Score:
+    </div>
 
     <div class="buttons">
   <button id="next-seg" class="button">
-    Next Segmentation
+    Switch Segmentation
   </button>
-  <button id="previous-seg" class="button">
-    Previous Segmentation
+  <button id="calculate" class="button">
+    Calculate
+  </button>
+  <button id="next-img" class="button">
+    Next Image
   </button>
 </div>
 
-<h3 class="title is-3">Setup</h3>
 
-<!-- prettier-ignore-start -->
-
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">const</span> <span class="nx">colorMapId</span> <span class="o">=</span> <span class="s1">'HelloWorld'</span><span class="p">;</span>
-<span class="kd">const</span> <span class="nx">colormap</span> <span class="o">=</span> <span class="nx">cornerstone</span><span class="p">.</span><span class="nx">colors</span><span class="p">.</span><span class="nx">getColormap</span><span class="p">(</span><span class="nx">colorMapId</span><span class="p">);</span>
-<span class="kd">const</span> <span class="nx">distinctColors</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">175</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
-<span class="p">];</span>
-
-<span class="nx">colormap</span><span class="p">.</span><span class="nx">setNumberOfColors</span><span class="p">(</span><span class="nx">distinctColors</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">distinctColors</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">colormap</span><span class="p">.</span><span class="nx">setColor</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">distinctColors</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="nx">cornerstoneTools</span><span class="p">.</span><span class="nx">store</span><span class="p">.</span><span class="nx">modules</span><span class="p">.</span><span class="nx">brush</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">colorMapId</span> <span class="o">=</span> <span class="nx">colorMapId</span><span class="p">;</span></code></pre></figure>
-
-<!-- prettier-ignore-end -->
 
 <script>
+
+document.getElementById('calculate').addEventListener('click', function(){
+  loadGroundTruth();
+  var segmentationArrayA = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0].pixelData;
+  var segmentationArrayB = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[1].pixelData;
+
+//  var columns = cornerstone.getImage(document.getElementById('cornerstone-element')).columns;
+//  var height = cornerstone.getImage(document.getElementById('cornerstone-element')).height;
+
+  var BminusA = 0;
+  var AminusB = 0;
+  var intersection = 0;
+  var length = Math.min(segmentationArrayA.length,segmentationArrayB.length);
+
+  for(var i = 0; i < length; ++i){
+    if(segmentationArrayA[i] == 1 || segmentationArrayB[i] == 1){
+      if(segmentationArrayA[i]==segmentationArrayB[i]){ intersection++; }
+      else if(segmentationArrayA[i]==1) { AminusB++; }
+      else { BminusA++; }
+    }
+  }
+  var jaccard = ((intersection/(BminusA+AminusB+intersection))*100).toFixed(3);
+  var scoreRanges = {0:"D",20:"C",40:"B",60:"A",80:"A+"};
+  if (jaccard == 0) { var score = "F";}
+  else if (jaccard == 100) { var score = "Perfect Score";}
+  else {
+  var score = scoreRanges[Math.round(jaccard/20)*20]; }
+
+  document.getElementById("score").innerHTML = "Score: "+score;
+});
+
+document.getElementById('brush-tool').addEventListener('click', function(){
+  cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = false;
+  document.getElementById('next-seg').disabled = false;
+
+});
+
+document.getElementById('zoom-tool').addEventListener('click', function(){
+  //cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = true;
+  document.getElementById('next-seg').disabled = true;
+});
+
+document.getElementById('pan-tool').addEventListener('click', function(){
+  //cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('Pan', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = true;
+  document.getElementById('next-seg').disabled = true;
+});
+
+function loadGroundTruth(){
+  const testData = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
+  cornerstoneTools.addToolState(document.getElementById('cornerstone-element'),'brush', testData);
+}
+
 function initCustomColorMap(){
   const colorMapId = 'HelloWorld';
   const colormap = cornerstone.colors.getColormap(colorMapId);
   const distinctColors = [
-    [255, 255, 255, 255],
-    [60, 180, 175, 255],
-    [255, 225, 25, 255],
-    [0, 130, 200, 255],
+    [255, 255, 0, 255],
+    [60, 180, 175, 255]
   ];
-
+  // [255, 255, 255, 255]
   colormap.setNumberOfColors(distinctColors.length);
 
   for (let i = 0; i < distinctColors.length; i++) {
@@ -187,10 +201,6 @@ function initCustomColorMap(){
 // UI Setup
 document.getElementById('next-seg').addEventListener('click', function(){
   cornerstoneTools.store.state.tools[0].nextSegmentation();
-});
-
-document.getElementById('previous-seg').addEventListener('click', function(){
-  cornerstoneTools.store.state.tools[0].previousSegmentation();
 });
 
 
@@ -222,7 +232,6 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   // Init CornerstoneTools
   cornerstoneTools.init();
   cornerstone.enable(element);
-  const toolName = 'Brush';
   const imageIds = [];
 
   for (let i = 1; i < 38; i++) {
@@ -246,9 +255,15 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   });
 
   // Add the tool
-  const apiTool = cornerstoneTools[`${toolName}Tool`];
-  cornerstoneTools.addTool(apiTool);
-  cornerstoneTools.setToolActive(toolName, { mouseButtonMask: 1 });
+  // const apiTool = cornerstoneTools[`${toolName}Tool`];
+  const BrushTool = cornerstoneTools.BrushTool;
+  const ZoomTool = cornerstoneTools.ZoomTool;
+  const PanTool = cornerstoneTools.PanTool;
+  cornerstoneTools.addTool(BrushTool);
+  cornerstoneTools.addTool(ZoomTool);
+  cornerstoneTools.addTool(PanTool);
+
+  cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
 
   /***************************************************************************
    * UI & Boilerplate setup code
@@ -338,7 +353,6 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
       </div>
     </main><footer class="footer">
   <div class="content container">
-    <p>CornerstoneTools.js is a light-weight solution for building Tools on top of Cornerstone.js. It&#39;s only dependencies are libraries within the Cornerstone family. Instead of trying to &quot;do everything&quot; it aims to be extensible and pluggable to aid in the rapid development of new tools. Ideally, tools created using cornerstone-tools can be easily shared, allowing for the creation of a broader ecosystem.</p>
 
     <p style="text-align: center;">
       <strong>CornerstoneTools.js</strong> is licensed
