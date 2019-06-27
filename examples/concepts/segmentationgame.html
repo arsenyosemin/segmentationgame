@@ -42,7 +42,7 @@
 </head>
 <body><header role="banner">
   <nav class="navbar" role="navigation" aria-label="main navigation">
-    
+
   </nav>
 </header>
 
@@ -77,7 +77,19 @@ if ($navbarBurgers.length > 0) {
       <div class="wrapper">
         <section class="section">
   <div class="container">
-    
+
+
+    <button id="brush-tool" class="button">
+      Brush Tool
+    </button>
+
+    <button id="zoom-tool" class="button">
+      Zoom Tool
+    </button>
+
+    <button id="pan-tool" class="button">
+      Pan Tool
+    </button>
 
     <div class="cornerstone-element-wrapper">
       <div
@@ -126,14 +138,43 @@ document.getElementById('calculate').addEventListener('click', function(){
   document.getElementById("test").innerHTML = "Jaccard: "+((intersection/(BminusA+AminusB+intersection))*100).toFixed(3) + "%";
 });
 
+document.getElementById('brush-tool').addEventListener('click', function(){
+  cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = false;
+  document.getElementById('next-seg').disabled = false;
+
+});
+
+document.getElementById('zoom-tool').addEventListener('click', function(){
+  //cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = true;
+  document.getElementById('next-seg').disabled = true;
+});
+
+document.getElementById('pan-tool').addEventListener('click', function(){
+  //cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('Pan', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
+  document.getElementById('calculate').disabled = true;
+  document.getElementById('next-seg').disabled = true;
+});
+
+
+
 function initCustomColorMap(){
   const colorMapId = 'HelloWorld';
   const colormap = cornerstone.colors.getColormap(colorMapId);
   const distinctColors = [
-    [255, 255, 255, 255],
+    [255, 255, 0, 255],
     [60, 180, 175, 255]
   ];
-
+  // [255, 255, 255, 255]
   colormap.setNumberOfColors(distinctColors.length);
 
   for (let i = 0; i < distinctColors.length; i++) {
@@ -177,7 +218,6 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   // Init CornerstoneTools
   cornerstoneTools.init();
   cornerstone.enable(element);
-  const toolName = 'Brush';
   const imageIds = [];
 
   for (let i = 1; i < 38; i++) {
@@ -201,9 +241,15 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   });
 
   // Add the tool
-  const apiTool = cornerstoneTools[`${toolName}Tool`];
-  cornerstoneTools.addTool(apiTool);
-  cornerstoneTools.setToolActive(toolName, { mouseButtonMask: 1 });
+  // const apiTool = cornerstoneTools[`${toolName}Tool`];
+  const BrushTool = cornerstoneTools.BrushTool;
+  const ZoomTool = cornerstoneTools.ZoomTool;
+  const PanTool = cornerstoneTools.PanTool;
+  cornerstoneTools.addTool(BrushTool);
+  cornerstoneTools.addTool(ZoomTool);
+  cornerstoneTools.addTool(PanTool);
+
+  cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
 
   /***************************************************************************
    * UI & Boilerplate setup code
