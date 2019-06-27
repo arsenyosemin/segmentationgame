@@ -123,7 +123,7 @@ document.getElementById('calculate').addEventListener('click', function(){
     }
   }
 
-  document.getElementById("test").innerHTML = "Same: "+ same + " Miss: " + miss+ " Off: " + off;
+  document.getElementById("test").innerHTML = "Jaccard: "+((same/(same+miss+off))*100).toFixed(3) + "%";
 });
 
 function initCustomColorMap(){
