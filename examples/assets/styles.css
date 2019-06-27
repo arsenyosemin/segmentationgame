@@ -1,7 +1,23 @@
 .active-mode {
   color: red;
 }
+body {
+  background:
+    Black;
+}
 
+.navbar {
+  background: Black;
+}
+
+.footer {
+  background: Black;
+}
+
+.button {
+  color: Grey;
+  background: DarkBlue;
+}
 .cornerstone-element-wrapper {
   width: 100%;
   margin: 15px auto 35px auto;
