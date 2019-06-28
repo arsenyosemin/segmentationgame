@@ -105,6 +105,10 @@ function detectmob() {
       Pan Tool
     </button>
 
+    <div id="task" class='score'>
+      Your Task:
+    </div>
+
     <div class="cornerstone-element-wrapper">
       <div
         id="cornerstone-element"
@@ -300,6 +304,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   const imageIds = [];
   const relevant_images_array = [15,25,16,21];
   const path_to_groundtruth_array = ['gallbladder15.txt','kidney25.txt','aorta16.txt','spleen21.txt'];
+  const task_label = ['Find the Gallbladder','Find the Kidneys','Find the Aorta','Find the Spleen'];
   let current_path_groundtruth = 'gallbladder15.txt';
 
   for (let i = 0; i < relevant_images_array.length ; i++) {
@@ -317,22 +322,26 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   element.focus();
 
   var image_index = 0
+
   cornerstone.loadImage(imageIds[image_index]).then(function(image) {
     cornerstone.displayImage(element, image);
   });
 
-  document.getElementById('next-img').addEventListener('click', function(){
+  document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
 
-    if(image_index > relevant_images_array.length) {
-      image_index = 0;
+  document.getElementById('next-img').addEventListener('click', function(){
+    image_index++;
+    if(image_index < relevant_images_array.length) {
+      document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
+      document.getElementById("score").innerHTML = "Score: ";
+      current_path_groundtruth = path_to_groundtruth_array[image_index];
+      cornerstoneTools.clearToolState(element, 'brush');
+      cornerstoneTools.store.state.tools[0].nextSegmentation();
+      cornerstone.loadImage(imageIds[image_index]).then(function(image) {
+        cornerstone.displayImage(element, image);
+      });
     }
-    current_path_groundtruth = path_to_groundtruth_array[image_index];
-    cornerstoneTools.clearToolState(element, 'brush');
-    cornerstoneTools.store.state.tools[0].nextSegmentation();
-    cornerstone.loadImage(imageIds[image_index]).then(function(image) {
-      cornerstone.displayImage(element, image);
-      image_index++;
-    });
+
   });
 
   // Add the tool
