@@ -137,14 +137,10 @@ if(detectmob()==true){
 }
 
 document.getElementById('calculate').addEventListener('click', function(){
-  let path_to_groundtruth_array = ['gallbladder15.txt','kidney25.txt','aorta16.txt','spleen21.txt'];
-  let path = 'json.txt';
-  if(image_index < 4) {
-    path = path_to_groundtruth_array[image_index];
-  }
-  let tempdata = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
+  let path = current_path_groundtruth;
+  const e = document.getElementById('cornerstone-element');
+  let tempdata = cornerstoneTools.getToolState(e,'brush').data[0];
   if(tempdata.pixelData !== undefined){
-    const e = document.getElementById('cornerstone-element');
     fetch(path).then(data => data.json()).then(
       testData => {
         let newData = JSON.parse(JSON.stringify(testData));
@@ -154,7 +150,7 @@ document.getElementById('calculate').addEventListener('click', function(){
         b.my_paint();
         cornerstone.invalidate(e);
         cornerstoneTools.store.state.tools[0].nextSegmentation();
-        let dataLength2 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data.length;
+        let dataLength2 = cornerstoneTools.getToolState(e,'brush').data.length;
         if(dataLength2 === 2){
           caclulateScore();
         }
@@ -302,15 +298,18 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   cornerstoneTools.init();
   cornerstone.enable(element);
   const imageIds = [];
+  const relevant_images_array = [15,25,16,21];
+  const path_to_groundtruth_array = ['gallbladder15.txt','kidney25.txt','aorta16.txt','spleen21.txt'];
+  let current_path_groundtruth = 'gallbladder15.txt';
 
-  for (let i = 1; i < 38; i++) {
+  for (let i = 0; i < relevant_images_array.length ; i++) {
     imageIds.push(
-      'wadouri:' + baseUrl + 'assets/dicom/bellona/chest_lung/' + i + '.dcm'
+      'wadouri:' + baseUrl + 'assets/dicom/bellona/chest_lung/' + relevant_images_array[i] + '.dcm'
     );
   }
 
   const stack = {
-    currentImageIdIndex: 15,
+    currentImageIdIndex: 0,
     imageIds: imageIds,
   };
 
@@ -323,23 +322,17 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   });
 
   document.getElementById('next-img').addEventListener('click', function(){
-    const relevant_images_array = [15,25,16,21];
-    let temp_index = image_index;
-    if(image_index < 4) {
-      temp_index = relevant_images_array[image_index];
-      image_index = image_index+1;
-    } else if (image_index < 38) {
-      temp_index = image_index; //get random image?
-    } else {
-      temp_index = 38;
-    }
-    cornerstone.loadImage(imageIds[temp_index]).then(function(image) {
-      cornerstone.displayImage(element, image);
-    });
 
-    // cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
-    //   cornerstone.displayImage(element, image);
-    // });
+    if(image_index > relevant_images_array.length) {
+      image_index = 0;
+    }
+    current_path_groundtruth = path_to_groundtruth_array[image_index];
+    cornerstoneTools.clearToolState(element, 'brush');
+    cornerstoneTools.store.state.tools[0].nextSegmentation();
+    cornerstone.loadImage(imageIds[image_index]).then(function(image) {
+      cornerstone.displayImage(element, image);
+      image_index++;
+    });
   });
 
   // Add the tool
