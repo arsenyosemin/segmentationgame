@@ -58,7 +58,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 });
-function detectmob() { 
+function detectmob() {
  if( navigator.userAgent.match(/Android/i)
  || navigator.userAgent.match(/webOS/i)
  || navigator.userAgent.match(/iPhone/i)
@@ -91,6 +91,10 @@ function detectmob() {
       Pan Tool
     </button>
 
+    <div id="task" class='score' style="color:red; font-size:30px;">
+      Your Task:
+    </div>
+
     <div class="cornerstone-element-wrapper">
       <div
         id="cornerstone-element"
@@ -99,7 +103,7 @@ function detectmob() {
         oncontextmenu="return false"
       ></div>
     </div>
-    <div id="score" class='score'>
+    <div id="score" class='score' style="color:rgb(251, 255, 0); font-size:30px;">
       Score:
     </div>
 
@@ -146,10 +150,10 @@ if(detectmob()==true){
 //});
 
 document.getElementById('calculate').addEventListener('click', function(){
-  let tempdata = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
+  let path = current_path_groundtruth;
+  const e = document.getElementById('cornerstone-element');
+  let tempdata = cornerstoneTools.getToolState(e,'brush').data[0];
   if(tempdata.pixelData !== undefined){
-    const e = document.getElementById('cornerstone-element');
-    const path = 'json.txt';
     fetch(path).then(data => data.json()).then(
       testData => {
         let newData = JSON.parse(JSON.stringify(testData));
@@ -159,7 +163,7 @@ document.getElementById('calculate').addEventListener('click', function(){
         b.my_paint();
         cornerstone.invalidate(e);
         cornerstoneTools.store.state.tools[0].nextSegmentation();
-        let dataLength2 = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data.length;
+        let dataLength2 = cornerstoneTools.getToolState(e,'brush').data.length;
         if(dataLength2 === 2){
           caclulateScore();
         }
@@ -309,10 +313,14 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   cornerstoneTools.init();
   cornerstone.enable(element);
   const imageIds = [];
+  const relevant_images_array = [15,25,16,21];
+  const path_to_groundtruth_array = ['gallbladder15.txt','kidney25.txt','aorta16.txt','spleen21.txt'];
+  const task_label = ['Find the Gallbladder','Find the Kidneys','Find the Aorta','Find the Spleen'];
+  let current_path_groundtruth = 'gallbladder15.txt';
 
-  for (let i = 1; i < 38; i++) {
+  for (let i = 0; i < relevant_images_array.length ; i++) {
     imageIds.push(
-      'wadouri:' + baseUrl + 'assets/dicom/bellona/chest_lung/' + i + '.dcm'
+      'wadouri:' + baseUrl + 'assets/dicom/bellona/chest_lung/' + relevant_images_array[i] + '.dcm'
     );
   }
 
@@ -325,22 +333,25 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   element.focus();
 
   var image_index = 0
+
   cornerstone.loadImage(imageIds[image_index]).then(function(image) {
     cornerstone.displayImage(element, image);
   });
 
-  document.getElementById('next-img').addEventListener('click', function(){
-    cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
-      cornerstone.displayImage(element, image);
-      cornerstoneTools.store.state.tools[0].nextSegmentation();
-    });
-  });
+  document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
 
-  document.getElementById('prev-img').addEventListener('click', function(){
-    cornerstone.loadImage(imageIds[--image_index]).then(function(image) {
-      cornerstone.displayImage(element, image);
+  document.getElementById('next-img').addEventListener('click', function(){
+    image_index++;
+    if(image_index < relevant_images_array.length) {
+      document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
+      document.getElementById("score").innerHTML = "Score: ";
+      current_path_groundtruth = path_to_groundtruth_array[image_index];
+      cornerstoneTools.clearToolState(element, 'brush');
       cornerstoneTools.store.state.tools[0].nextSegmentation();
-    });
+      cornerstone.loadImage(imageIds[image_index]).then(function(image) {
+        cornerstone.displayImage(element, image);
+      });
+    }
   });
 
   // Add the tool
