@@ -49,17 +49,14 @@
 </div>
 <div id="loginOverlay" class="overlay" style="width: 100%;">
   <div class="overlay-content">
-    <div id="login" class='login' style="color:red; font-size:30px;">
+    Welcome to PACS-Man! <br><br> 
+    <div id="login" class='login' style="color:grey; font-size:10px;">
+      Please enter your name: &nbsp
       <input type="text" id='username'>
       <input type="submit" onclick="closeLogin()">
     </div>
   </div>
 </div>
-  <header role="banner">
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-
-  </nav>
-</header>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -84,6 +81,10 @@ function detectmob() {
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
         <section class="section">
+          
+  <div class="container pacsman">
+    <h1>PAC-S MAN</h1>
+  </div>
   <div class="container">
 
 <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; View Objective</span><br>
@@ -476,7 +477,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
       "Content-Type": "application/json"
     },
     "processData": false,
-    "data": "{\"Events\": [\n{\n\"Pri\" : \"103\",\n\"Version\": \"1\",\n\"Timestamp\": \""+ Date.now()+"\",\n\"Hostname\": \"https://pacs-man.herokuapp.com/examples/concepts/segmentationgame.html\",\n\"App-name\": \"Pacs-Man\",\n\"Procid\": \"1234\",\n\"Msg-id\": \"pacs-man score\",\n\"Msg\": \""+login+"\",\n\"Comment\": \""+user_score+"\"\n}]}"
+    "data": "{\"Events\": [\n{\n\"Pri\" : \"103\",\n\"Version\": \"1\",\n\"Timestamp\": \"2015-03-17T00:05\",\n\"Hostname\": \"https://pacs-man.herokuapp.com/examples/concepts/segmentationgame.html\",\n\"App-name\": \"Pacs-Man\",\n\"Procid\": \"1234\",\n\"Msg-id\": \"pacs-man score\",\n\"Msg\": \""+login+"\",\n\"Comment\": \""+user_score+"\"\n}]}"
     }
 
     $.ajax(settings).done(function (response) {
