@@ -72,7 +72,7 @@ if ($navbarBurgers.length > 0) {
 }
 
 });
-function detectmob() { 
+function detectmob() {
  if( navigator.userAgent.match(/Android/i)
  || navigator.userAgent.match(/webOS/i)
  || navigator.userAgent.match(/iPhone/i)
@@ -137,10 +137,14 @@ if(detectmob()==true){
 }
 
 document.getElementById('calculate').addEventListener('click', function(){
+  let path_to_groundtruth_array = ['gallbladder15.txt','kidney25.txt','aorta16.txt','spleen21.txt'];
+  let path = 'json.txt';
+  if(image_index < 4) {
+    path = path_to_groundtruth_array[image_index];
+  }
   let tempdata = cornerstoneTools.getToolState(document.getElementById('cornerstone-element'),'brush').data[0];
   if(tempdata.pixelData !== undefined){
     const e = document.getElementById('cornerstone-element');
-    const path = 'json.txt';
     fetch(path).then(data => data.json()).then(
       testData => {
         let newData = JSON.parse(JSON.stringify(testData));
@@ -306,7 +310,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   }
 
   const stack = {
-    currentImageIdIndex: 0,
+    currentImageIdIndex: 15,
     imageIds: imageIds,
   };
 
@@ -319,9 +323,23 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   });
 
   document.getElementById('next-img').addEventListener('click', function(){
-    cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
+    const relevant_images_array = [15,25,16,21];
+    let temp_index = image_index;
+    if(image_index < 4) {
+      temp_index = relevant_images_array[image_index];
+      image_index = image_index+1;
+    } else if (image_index < 38) {
+      temp_index = image_index; //get random image?
+    } else {
+      temp_index = 38;
+    }
+    cornerstone.loadImage(imageIds[temp_index]).then(function(image) {
       cornerstone.displayImage(element, image);
     });
+
+    // cornerstone.loadImage(imageIds[++image_index]).then(function(image) {
+    //   cornerstone.displayImage(element, image);
+    // });
   });
 
   // Add the tool
