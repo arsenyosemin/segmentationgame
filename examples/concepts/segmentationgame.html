@@ -312,7 +312,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
 </section>
 
 <script>
-  const baseUrl = "http://localhost:8080/examples/";
+  const baseUrl = "https://pacs-man.herokuapp.com/examples/";
     // window.ENVIRONMENT === 'development'
     //   ? 'http://localhost:4000/'
     //   : 'https://tools.cornerstonejs.org/examples/';
@@ -375,11 +375,17 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
   const BrushTool = cornerstoneTools.BrushTool;
   const ZoomTool = cornerstoneTools.ZoomTool;
   const PanTool = cornerstoneTools.PanTool;
+  const ZoomTouchPinchTool = cornerstoneTools.ZoomTouchPinchTool;
+  const PanMultiTouchTool = cornerstoneTools.PanMultiTouchTool;
   cornerstoneTools.addTool(BrushTool);
   cornerstoneTools.addTool(ZoomTool);
   cornerstoneTools.addTool(PanTool);
+  cornerstoneTools.addTool(ZoomTouchPinchTool);
+  cornerstoneTools.addTool(PanMultiTouchTool);
 
   cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('ZoomTouchPinch', { mouseButtonMask: 1 });
+  cornerstoneTools.setToolActive('PanMultiTouch', { mouseButtonMask: 1 });
 
   /***************************************************************************
    * UI & Boilerplate setup code
@@ -469,7 +475,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
     var settings = {
     "async": true,
     "crossDomain": true,
-    "url": "http://hackathon.siim.org/sole/bulk-syslog-events",
+    "url": "https://hackathon.siim.org/sole/bulk-syslog-events",
     "method": "POST",
     "headers": {
       "apikey": "c2e5d31b-8ba0-4d22-a41e-a2396c2de76d",
