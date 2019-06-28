@@ -40,12 +40,11 @@
   <script src="/dist/cornerstoneTools.js"></script>
 </head>
 <body>
-<div id="myNav" class="overlay">
-  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+<div id="myNav" class="overlay" onclick="closeNav()">
   <div class="overlay-content">
-    Login:<br>
-    <input type="text" name="login" id="login">
-    <button id="login-button" class="button" onclick="closeNav()">submit</button>
+    <div id="task" class='score' style="color:red; font-size:30px;">
+      
+    </div>
   </div>
 </div>
   <header role="banner">
@@ -79,6 +78,7 @@ function detectmob() {
         <section class="section">
   <div class="container">
 
+<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; View Objective</span><br>
     <button id="brush-tool" class="button" >
       Brush Tool
     </button>
@@ -91,9 +91,6 @@ function detectmob() {
       Pan Tool
     </button>
 
-    <div id="task" class='score' style="color:red; font-size:30px;">
-      Your Task:
-    </div>
 
     <div class="cornerstone-element-wrapper">
       <div
@@ -112,14 +109,10 @@ function detectmob() {
   <button id="calculate" class="button">
     Load Answer
   </button>
-  <button id="next-img" class="button">
+  <button id="next-img" class="button" disabled>
     Next Image
   </button>
-  <button id="prev-img" class="button">
-    Previous Image
-  </button>
 </div>
-<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; open</span>
 
 <script>
 function openNav() {
@@ -133,11 +126,13 @@ function closeNav() {
 
 
 <script>
-var login = "";
+//var login = "";
 var user_score = 0;
-document.getElementById('login-button').addEventListener('click', function(){
-  login = document.getElementById('login').value;
-});
+var user_scores = 0;
+//document.getElementById('login-button').addEventListener('click', function(){
+//  login = document.getElementById('login').value;
+  //document.getElementById('username').innerHTML= login;
+//});
 
 if(detectmob()==true){
   //document.getElementById('brush-tool').style.visibility = 'hidden';
@@ -170,6 +165,8 @@ document.getElementById('calculate').addEventListener('click', function(){
       }
     );
   }
+  document.getElementById('calculate').disabled = true;
+  document.getElementById('next-img').disabled = false;
   //sendSole();
 });
 
@@ -177,9 +174,6 @@ document.getElementById('brush-tool').addEventListener('click', function(){
   cornerstoneTools.setToolActive('Brush', { mouseButtonMask: 1 });
   cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
   cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
-  document.getElementById('calculate').disabled = false;
-  document.getElementById('next-seg').disabled = false;
-
 });
 
 document.getElementById('zoom-tool').addEventListener('click', function(){
@@ -187,8 +181,6 @@ document.getElementById('zoom-tool').addEventListener('click', function(){
   cornerstoneTools.setToolActive('Zoom', { mouseButtonMask: 1 });
   cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
   cornerstoneTools.setToolDisabled('Pan', { mouseButtonMask: 1 });
-  document.getElementById('calculate').disabled = true;
-  document.getElementById('next-seg').disabled = true;
 });
 
 document.getElementById('pan-tool').addEventListener('click', function(){
@@ -196,8 +188,6 @@ document.getElementById('pan-tool').addEventListener('click', function(){
   cornerstoneTools.setToolActive('Pan', { mouseButtonMask: 1 });
   cornerstoneTools.setToolPassive('Brush', { mouseButtonMask: 1 });
   cornerstoneTools.setToolDisabled('Zoom', { mouseButtonMask: 1 });
-  document.getElementById('calculate').disabled = true;
-  document.getElementById('next-seg').disabled = true;
 });
 
 function downloadGroundTruth(){
@@ -226,13 +216,17 @@ function caclulateScore(){
         else { BminusA++; }
       }
     }
-    var jaccard = ((intersection/(BminusA+AminusB+intersection))*100).toFixed(3);
+    var jaccard = ((intersection/(BminusA+AminusB+intersection))*100);
     var scoreRanges = {1:"D",21:"C",41:"B",61:"A",81:"A+"};
     if (jaccard == 0) { var score = "F";}
     else if (jaccard == 100) { var score = "Perfect Score";}
     else {
     var score = scoreRanges[(Math.round(jaccard/20)*20)+1]; }
-    
+
+    user_score = ((user_score*user_scores)+jaccard)/(user_scores+1);
+    //document.getElementById('user_score').innerHTML=user_score.toFixed(3);
+
+    user_scores++;
 
     document.getElementById("score").innerHTML = "Score: "+score;
 }
@@ -338,12 +332,12 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
     cornerstone.displayImage(element, image);
   });
 
-  document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
+  document.getElementById("task").innerHTML = task_label[image_index];
 
   document.getElementById('next-img').addEventListener('click', function(){
     image_index++;
     if(image_index < relevant_images_array.length) {
-      document.getElementById("task").innerHTML = "Your Task: " + task_label[image_index];
+      document.getElementById("task").innerHTML = task_label[image_index];
       document.getElementById("score").innerHTML = "Score: ";
       current_path_groundtruth = path_to_groundtruth_array[image_index];
       cornerstoneTools.clearToolState(element, 'brush');
@@ -352,6 +346,9 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
         cornerstone.displayImage(element, image);
       });
     }
+    openNav();
+    document.getElementById('next-img').disabled = true;
+    document.getElementById('calculate').disabled = false;
   });
 
   // Add the tool
