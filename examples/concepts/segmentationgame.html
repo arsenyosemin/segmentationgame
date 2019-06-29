@@ -181,8 +181,6 @@ document.getElementById('calculate').addEventListener('click', function(){
       }
     );
   }
-  document.getElementById('calculate').disabled = true;
-  document.getElementById('next-img').disabled = false;
 });
 
 document.getElementById('brush-tool').addEventListener('click', function(){
@@ -234,7 +232,7 @@ function caclulateScore(){
     var jaccard = ((intersection/(BminusA+AminusB+intersection))*100);
     var scoreRanges = {1:"D",21:"C",41:"B",61:"A",81:"A+"};
     if (jaccard == 0) { var score = "F";}
-    else if (jaccard == 100) { var score = "Perfect Score";}
+    else if (jaccard >= 100) { var score = "Perfect Score";}
     else {
     var score = scoreRanges[(Math.round(jaccard/20)*20)+1]; }
 
@@ -243,11 +241,17 @@ function caclulateScore(){
 
     user_scores++;
 
-    if (user_scores==4){
+    if (user_scores==relevant_images_array.length){
+      document.getElementById('next-img').disabled = true;
       sendSole();
+    }
+    else {
+      document.getElementById('next-img').disabled = false;
     }
 
     document.getElementById("score").innerHTML = "Score: "+score;
+
+    document.getElementById('calculate').disabled = true;
 }
 
 // function loadGroundTruth(){
@@ -312,7 +316,7 @@ myElement.addEventListener('cornerstoneimagerendered', handleImageRendered)
 </section>
 
 <script>
-  const baseUrl = "https://pacs-man.herokuapp.com/examples/";
+  const baseUrl = "http://localhost:8080/examples/";
     // window.ENVIRONMENT === 'development'
     //   ? 'http://localhost:4000/'
     //   : 'https://tools.cornerstonejs.org/examples/';
